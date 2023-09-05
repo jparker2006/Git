@@ -11,7 +11,8 @@ import java.security.NoSuchAlgorithmException;
 
 public class blob {
     
-    public blob(String inputFile) throws IOException {
+    public static void blobFile(String inputFile) throws IOException {
+        try {
         File file = new File(inputFile);
         BufferedReader reader = new BufferedReader(new FileReader(file));
         StringBuilder fileInfo = new StringBuilder();
@@ -21,20 +22,28 @@ public class blob {
         }
         reader.close();
         String hashed = hashStringToSHA1(fileInfo.toString());
-        writeCode(hashed, fileInfo);
-
+        write(hashed, fileInfo);
     }
+    catch (IOException e)
+    {
+        e.printStackTrace();
+    }
+}
     
 
- public void read(String hashed, String text) throws IOException {
-    FileWriter kev = new FileWriter(hashed);
-        try (PrintWriter writer = new PrintWriter(kev)) {
-            writer.println(text);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static void write(String hashed, StringBuilder inside)
+    {
+        try{
+        String newFile = hashed;
+        FileWriter write = new FileWriter(newFile);
+        write.write(inside.toString());
+        write.close();
     }
-    
+   catch (IOException e)
+    {
+        e.printStackTrace();
+    }
+}
     
     //This is from google, as allowed
     public static String hashStringToSHA1(String input) {
@@ -59,9 +68,11 @@ public class blob {
     }
 
 public static void main(String[] args) {
-    try {
-        blob rw = new blob("input.txt");
-    } catch (IOException e) {
-        e.printStackTrace();
-    }}
+    try {String file = "input.txt";
+    blobFile(file);
+} catch (IOException e)
+{
+    e.printStackTrace();
+}
+}
 }
