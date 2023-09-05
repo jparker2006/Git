@@ -14,19 +14,19 @@ public class blob {
     public blob(String inputFile) throws IOException {
         File file = new File(inputFile);
         BufferedReader reader = new BufferedReader(new FileReader(file));
+        StringBuilder fileInfo = new StringBuilder();
         String line;
-        String fileInfo;
         while ((line = reader.readLine()) != null) {
-            fileInfo += line;
+            fileInfo.append(line).append("\n");
         }
         reader.close();
-        String hashed = encryptThisString(fileInfo);
+        String hashed = hashStringToSHA1(fileInfo.toString());
         writeCode(hashed, fileInfo);
 
     }
     
 
- public void writeCode(String hashed, String text) throws IOException {
+ public void read(String hashed, String text) throws IOException {
     FileWriter kev = new FileWriter(hashed);
         try (PrintWriter writer = new PrintWriter(kev)) {
             writer.println(text);
@@ -37,22 +37,26 @@ public class blob {
     
     
     //This is from google, as allowed
-    public static String encryptThisString(String input)
-    {
+    public static String hashStringToSHA1(String input) {
         try {
-            MessageDigest md = MessageDigest.getInstance("SHA-1");
-            byte[] messageDigest = md.digest(input.getBytes());
-            Integer no = new BigInteger(1, messageDigest);
-            String hashtext = no.toString(16);
-            while (hashtext.length() < 32) {
-                hashtext = "0" + hashtext;
+            MessageDigest sha1Digest = MessageDigest.getInstance("SHA-1");
+            byte[] inputBytes = input.getBytes();
+            sha1Digest.update(inputBytes);
+            byte[] hashBytes = sha1Digest.digest();
+            StringBuilder hexString = new StringBuilder();
+            for (byte hashByte : hashBytes) {
+                String hex = Integer.toHexString(0xFF & hashByte);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
             }
-            return hashtext;
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
         }
-        catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-}
+    }
 
 public static void main(String[] args) {
     try {
