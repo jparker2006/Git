@@ -18,7 +18,7 @@ public class blob {
         StringBuilder fileInfo = new StringBuilder();
         String line;
         while ((line = reader.readLine()) != null) {
-            fileInfo.append(line).append("\n");
+            fileInfo.append(line).append("\r\n");
         }
         reader.close();
         String hashed = hashStringToSHA1(fileInfo.toString());
