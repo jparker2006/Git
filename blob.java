@@ -8,45 +8,39 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-
 public class blob {
-    
+
     public static void blobFile(String inputFile) throws IOException {
         try {
-        File file = new File(inputFile);
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        StringBuilder fileInfo = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            line = line.trim();
-            fileInfo.append(line).append("");
-        }
-        reader.close();
-        String hashed = hashStringToSHA1(fileInfo.toString());
-        write(hashed, fileInfo);
-    }
-    catch (IOException e)
-    {
-        e.printStackTrace();
-    }
-}
-    
+            File file = new File(inputFile);
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            StringBuilder fileInfo = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                fileInfo.append(line).append("");
+            }
+            reader.close();
+            String hashed = hashStringToSHA1(fileInfo.toString());
+            write(hashed, fileInfo);
 
-    public static void write(String hashed, StringBuilder inside)
-    {
-        try{
-        String newFile = hashed;
-        FileWriter write = new FileWriter(newFile);
-        write.write(inside.toString());
-        write.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-   catch (IOException e)
-    {
-        e.printStackTrace();
+
+    public static void write(String hashed, StringBuilder inside) {
+        try {
+            String newFile = hashed;
+            FileWriter write = new FileWriter("./objects/" + newFile);
+            write.write(inside.toString());
+            write.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-}
-    
-    //This is from google, as allowed
+
+    // This is from google, as allowed
     public static String hashStringToSHA1(String input) {
         try {
             MessageDigest sha1Digest = MessageDigest.getInstance("SHA-1");
@@ -68,12 +62,12 @@ public class blob {
         }
     }
 
-public static void main(String[] args) {
-    try {String file = "input.txt";
-    blobFile(file);
-} catch (IOException e)
-{
-    e.printStackTrace();
-}
-}
+    public static void main(String[] args) {
+        try {
+            String file = "input.txt";
+            blobFile(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
