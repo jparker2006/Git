@@ -33,7 +33,7 @@ public class index extends blob {
         }
  }
 
-    public static void Commit(String fileName) throws IOException {
+    public static void commit(String fileName) throws IOException {
         try {
             String hashName = blobFile(fileName);
             files.put(fileName, hashName);
@@ -51,12 +51,30 @@ public class index extends blob {
     }
 
     public static void remove(String fileName) throws IOException {
+        try {
+            files.remove(fileName);
+
+            Path index = Paths.get("objects/index");
+            try (BufferedWriter clear = Files.newBufferedWriter(index, StandardOpenOption.TRUNCATE_EXISTING)) {
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try (BufferedWriter write = Files.newBufferedWriter(index, StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
+                for (Map.Entry<String, String> entry : files.entrySet()) {
+                    write.write(entry.getKey() + " : " + entry.getValue());
+                    write.newLine();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
     }
 
     public static void main(String[] args) {
         try {
             init();
-            Commit("input.txt");
+            remove("input.txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
