@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class index extends blob {
 
-    public static HashMap<String, String> files;
+    public static HashMap<String, String> files = new HashMap<>();
 
     public static void init() throws IOException {
         String folder = "objects";
@@ -27,35 +27,27 @@ public class index extends blob {
         if (!Files.exists(index)) {
             try {
                 Files.createFile(index);
-
-                for (String orginalFile : files.keySet()) {
-                    String hashFileName = files.get(orginalFile);
-                    files.put(orginalFile, hashFileName);
-                }
-
-                try (BufferedWriter writer = Files.newBufferedWriter(index, StandardOpenOption.CREATE,
-                        StandardOpenOption.WRITE)) {
-                    for (Map.Entry<String, String> entry : files.entrySet()) {
-                        writer.write(entry.getKey() + " : " + entry.getValue());
-                        writer.newLine();
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            } catch (IOException e) {
+            }catch (IOException e) {
                 e.printStackTrace();
             }
         }
-    }
+ }
 
     public static void Commit(String fileName) throws IOException {
         try {
-            blobFile(fileName);
+            String hashName = blobFile(fileName);
+            files.put(fileName, hashName);
+
+            Path index = Paths.get("objects/index");
+            try (BufferedWriter write = Files.newBufferedWriter(index, StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
+                for (Map.Entry<String, String> entry : files.entrySet()) {
+                    write.write(entry.getKey() + " : " + entry.getValue());
+                    write.newLine();
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        } 
     }
 
     public static void remove(String fileName) throws IOException {
@@ -63,7 +55,6 @@ public class index extends blob {
 
     public static void main(String[] args) {
         try {
-            String file = "input.txt";
             init();
             Commit("input.txt");
         } catch (IOException e) {

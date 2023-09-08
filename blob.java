@@ -11,7 +11,7 @@ import java.util.*;
 
 public class blob {
 
-    public static void blobFile(String inputFile) throws IOException {
+    public static String blobFile(String inputFile) throws IOException {
         try {
             File file = new File(inputFile);
             BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -25,8 +25,11 @@ public class blob {
             String hashed = hashStringToSHA1(fileInfo.toString());
             write(hashed, fileInfo);
 
+            return hashed;
+
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
