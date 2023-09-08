@@ -1,12 +1,15 @@
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.HashMap;
+import java.util.Map;
 import java.nio.file.Files;
-import java.util.*;
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
 
 public class index extends blob {
 
-    private HashMap<String, Double> files;
+    public static HashMap<String, String> files;
 
     public static void init() throws IOException {
         String folder = "objects";
@@ -24,6 +27,23 @@ public class index extends blob {
         if (!Files.exists(index)) {
             try {
                 Files.createFile(index);
+
+                for (String orginalFile : files.keySet()) {
+                    String hashFileName = files.get(orginalFile);
+                    files.put(orginalFile, hashFileName);
+                }
+
+                try (BufferedWriter writer = Files.newBufferedWriter(index, StandardOpenOption.CREATE,
+                        StandardOpenOption.WRITE)) {
+                    for (Map.Entry<String, String> entry : files.entrySet()) {
+                        writer.write(entry.getKey() + " : " + entry.getValue());
+                        writer.newLine();
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -36,6 +56,9 @@ public class index extends blob {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void remove(String fileName) throws IOException {
     }
 
     public static void main(String[] args) {
