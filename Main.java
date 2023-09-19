@@ -2,6 +2,7 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
+        System.out.println("Hello world");
         String file = "/Users/jparker/Desktop/Git/input.txt";
         try {
             index.init();

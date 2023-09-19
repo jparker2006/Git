@@ -40,4 +40,8 @@ public class tree {
         sc.close();
         sData = newContent;
     }
+
+    public String getContents() {
+        return this.sData.toString();
+    }
 }
